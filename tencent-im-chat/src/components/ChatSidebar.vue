@@ -18,7 +18,7 @@
     <!-- 新建对话按钮 -->
     <div class="p-4">
       <button
-        @click="$emit('new-chat')"
+        @click="emit('new-chat')"
         class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-xl transition-all duration-200 border border-gray-700"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,9 +35,9 @@
       </div>
       
       <div
-        v-for="conversation in conversations"
+        v-for="conversation in props.conversations"
         :key="conversation.conversationID"
-        @click="$emit('select-conversation', conversation)"
+        @click="emit('select-conversation', conversation)"
         class="group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200 mb-1"
         :class="[
           isActive(conversation)
@@ -76,7 +76,7 @@
 
       <!-- 空状态 -->
       <div
-        v-if="conversations.length === 0"
+        v-if="props.conversations.length === 0"
         class="flex flex-col items-center justify-center py-8 text-gray-500"
       >
         <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,15 +102,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { Conversation } from '../types';
 
-defineProps<{
+const props = defineProps<{
   conversations: Conversation[];
   currentConversation?: Conversation | null;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   'new-chat': [];
   'select-conversation': [conversation: Conversation];
 }>();
@@ -125,9 +124,4 @@ function getAvatarText(name: string): string {
 function isActive(conversation: Conversation): boolean {
   return !!props.currentConversation?.conversationID === conversation.conversationID;
 }
-
-const props = defineProps<{
-  conversations: Conversation[];
-  currentConversation?: Conversation | null;
-}>();
 </script>
